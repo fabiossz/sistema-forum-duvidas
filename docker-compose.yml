@@ -1,0 +1,40 @@
+version: "3.7"
+services:
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fj27
+      MYSQL_USER: caelum
+      MYSQL_PASSWORD: caelum
+    volumes:
+      - "db-data:/var/lib/mysql"
+    restart: on-failure
+    networks:
+      - fj27
+
+  api:
+    build: .
+    image: alefh/spring9356
+    ports:
+      - "5001:8080"
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PASSWORD: caelum
+      MYSQL_USER: caelum
+      MYSQL_DATABASE: fj27
+      MYSQL_PORT: 3306
+    restart: on-failure
+    depends_on:
+      - mysql
+    networks:
+      - fj27
+
+volumes:
+  db-data:
+
+networks:
+  fj27:
